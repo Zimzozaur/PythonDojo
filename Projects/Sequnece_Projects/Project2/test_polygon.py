@@ -38,6 +38,7 @@ def test_initialization(triangle):
 
 def test_interior_angle(triangle):
     assert triangle.interior_angle == 60
+    assert triangle.interior_angle == 60
 
 
 def test_equality(triangle):
@@ -49,11 +50,6 @@ def test_greater_than(triangle):
     assert not (triangle < triangle)
     assert triangle < Polygon(4, 1)
     assert Polygon(4, 1) > triangle
-
-
-def test_max_area_polygon():
-    polygons = Polygons(5, 1)
-    assert is_close(polygons.max_area, 2.377)
 
 
 def test_max_area_square(square: Polygon):
@@ -85,11 +81,6 @@ def test_representation_polygons():
 def test_polygons_len():
     assert len(Polygons(3, 1)) == 1
     assert len(Polygons(5, 1)) == 3
-
-
-def test_best_ration_polygon():
-    polygons = Polygons(10, 1)
-    assert polygons.max_efficiency_polygon is polygons[-1]
 
 
 def test_best_poly():

@@ -9,6 +9,13 @@ class Polygon:
         self._vertices = n
         self._r = r
 
+        # LAZY PROPERTIES
+        self._interior_angle = None
+        self._edge_length = None
+        self._apothem = None
+        self._area = None
+        self._perimeter = None
+
     def __repr__(self):
         return f'Polygon(n={self._edges}, r={self._r})'
 
@@ -38,23 +45,33 @@ class Polygon:
 
     @property
     def interior_angle(self) -> float:
-        return (self._edges - 2) * 180 / self._edges
+        if not self._interior_angle:
+            self._interior_angle = (self._edges - 2) * 180 / self._edges
+        return self._interior_angle
 
     @property
     def edge_length(self) -> float:
-        return math.sin(math.pi / self._edges) * self._r * 2
+        if not self._edge_length:
+            self._edge_length = math.sin(math.pi / self._edges) * self._r * 2
+        return self._edge_length
 
     @property
     def apothem(self) -> float:
-        return math.cos(math.pi / self._edges) * self._r
+        if not self._apothem:
+            self._apothem = math.cos(math.pi / self._edges) * self._r
+        return self._apothem
 
     @property
     def area(self) -> float:
-        return self._edges / 2 * self.edge_length * self.apothem
+        if not self._area:
+            self._area = self._edges / 2 * self.edge_length * self.apothem
+        return self._area
 
     @property
     def perimeter(self):
-        return self._edges * self.edge_length
+        if not self._perimeter:
+            return self._edges * self.edge_length
+        return self._perimeter
 
 
 class Polygons:
@@ -64,8 +81,6 @@ class Polygons:
         self._end = end
         self._start = 3
         self._r = radius
-        self._polygons = tuple(Polygon(i, radius) for i in range(3, end + 1))
-        self._max_poly = sorted(self._polygons, key=lambda p: p.area / p.perimeter, reverse=True)
 
     def __repr__(self):
         return f'Polygons(end={self._end}, radius={self._r})'
@@ -73,10 +88,21 @@ class Polygons:
     def __len__(self) -> int:
         return self._end - self._start + 1
 
-    def __getitem__(self, item: slice | int):
-        return self._polygons[item]
+    def __iter__(self):
+        return self.PolygonIterator(self._end, self._r)
 
-    @property
-    def max_efficiency_polygon(self):
-        return self._max_poly[0]
+    class PolygonIterator:
+        def __init__(self, polygons: int, radius: int):
+            self.polygons: int = polygons
+            self.radius: int = radius
+            self.i = 3
 
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.i > self.polygons:
+                raise StopIteration
+            res = Polygon(self.i, self.radius)
+            self.i += 1
+            return res
