@@ -29,4 +29,4 @@ def expanded_synthetic_division(dividend, divisor):
 
 
 if __name__ == '__main__':
-    print(expanded_synthetic_division([1, -2, -5, 6], [1, -3]))
+    print(expanded_synthetic_division([1, -3, 1, 4, -5], [1, 1, -2]))
